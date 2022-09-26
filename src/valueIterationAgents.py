@@ -46,23 +46,19 @@ class ValueIterationAgent(ValueEstimationAgent):
         for i in range(self.iterations):
             for state in mdp.getStates():
                 rewardHere = self.mdp.getReward(state, None, state)
-                maxProb = max(
-                        map(
-                            self.mdp.getPossibleActions(state),
-                            lambda action: sum(
-                                map(
-                                    self.mdp.getTransitionStatesAndProbs(
-                                        state,
-                                        action,
-                                    ),
-                                    lambda nextState, prob: (
-                                        prob
-                                        * self.discount
-                                        * self.values[nextState])
-                                    )
-                                )
-                            )
-                        )
+                maxProb = float("-inf")
+                for action in self.mdp.getPossibleActions(state):
+                    currentProb = 0.0
+                    transition = self.mdp.getTransitionStatesAndProbs(
+                            state,
+                            action)
+                    for transState, transProb in transition
+                        currentProb += (
+                                transProb
+                                * self.discount
+                                * self.values[transState])
+                    if currentProb > maxProb:
+                        maxProb = currentProb
                 self.values[state] = rewardHere + maxProb
 
     def getValue(self, state):
