@@ -52,7 +52,7 @@ class ValueIterationAgent(ValueEstimationAgent):
                     transition = self.mdp.getTransitionStatesAndProbs(
                             state,
                             action)
-                    for transState, transProb in transition
+                    for transState, transProb in transition:
                         currentProb += (
                                 transProb
                                 * self.discount
