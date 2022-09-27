@@ -83,6 +83,8 @@ class QLearningAgent(ReinforcementAgent):
             if value > betterScore:
                 betterAction = action
                 betterScore = value
+            elif value == betterScore:
+                betterAction = random.choice([betterAction, action])
         return betterAction
 
     def getAction(self, state):
