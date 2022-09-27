@@ -66,8 +66,8 @@ class QLearningAgent(ReinforcementAgent):
             value = self.getQValue(state, action)
             if value > betterScore:
                 betterScore = value
-        else:
-            return 0.0
+        if betterScore == float("-inf"):
+            betterScore = 0.0
         return betterScore
 
     def computeActionFromQValues(self, state):
@@ -109,13 +109,16 @@ class QLearningAgent(ReinforcementAgent):
     def update(self, state, action, nextState, reward):
         if state not in self.qValues:
             self.qValues[state] = util.Counter()
+        if nextState not in self.qValues:
+            self.qValues[nextState] = util.Counter()
         oldValueTerm = (1.0 - self.alpha) * self.getQValue(state, action)
         search = float("-inf")
-        for alterState in self.qValues.keys():
-            for alterAction in self.qValues[alterState].keys():
-                value = self.getQValue(alterState, alterAction)
-                if value > search:
-                    search = value
+        for nextAction in self.qValues[nextState].keys():
+            value = self.getQValue(nextState, nextAction)
+            if value > search:
+                search = value
+        if search == float("-inf"):
+            search = 0.0
         searchTerm = self.alpha * (reward + self.discount * search)
         self.qValues[state][action] = oldValueTerm + searchTerm
 
